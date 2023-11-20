@@ -1,4 +1,6 @@
-# Thesis
+# Prerequisites
+- numpy
+- matplotlib plt
 
 ## LSB
 
