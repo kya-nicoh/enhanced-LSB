@@ -1,3 +1,5 @@
+# to run right click on code and click "open in interactive window"
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -20,5 +22,3 @@ for i in range(1, steps):
     )
 
 plt.figure(figsize=(8,8)).add_subplot(projection="3d").plot(*xyz.T)
-
-# to run right click on code and click "open in interactive window"
