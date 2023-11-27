@@ -21,4 +21,5 @@ for i in range(1, steps):
         xyz[i - 1] + lorenz (xyz[i - 1]) * dt
     )
 
-plt.figure(figsize=(8,8)).add_subplot(projection="3d").plot(*xyz.T)
+# plt.figure(figsize=(8,8)).add_subplot(projection="3d").plot(*xyz.T)
+print(xyz)
