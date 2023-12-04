@@ -4,8 +4,6 @@ from PIL import Image
 # iter
 # img.getdata()
 
-array_x = [10, 5, 42, 30, 53, 39, 8, 23, 42]
-array_y = [50, 80, 40, 120, 302, 120, 239, 359, 201]
 
 # image used: 512 x 512
 
@@ -67,6 +65,8 @@ def modPix(pix, data):
 def encode_enc(newimg, data):
 	width = newimg.size[0]
 	(x, y) = (0, 0)
+
+	pix_loc_xy = [(10,50), (5,80), (42,40), (30,120), (53,302), (39,120), (8,239), (23,359), (42,201)]
 
 	# HERE FOR EMBEDDING
 	for pixel in modPix(newimg.getdata(), data):
