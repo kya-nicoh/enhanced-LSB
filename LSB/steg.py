@@ -1,5 +1,9 @@
 from PIL import Image
 
+# yield
+# iter
+# img.getdata()
+
 array_x = [10, 5, 42, 30, 53, 39, 8, 23, 42]
 array_y = [50, 80, 40, 120, 302, 120, 239, 359, 201]
 
@@ -17,10 +21,14 @@ def genData(data):
 # Pixels are modified according to the
 # 8-bit binary data and finally returned
 def modPix(pix, data):
-	datalist = genData(data)
-	lendata = len(datalist)
-	imdata = iter(pix)
+	datalist = genData(data) # generates the binary equivalent of the data ['01011120', '10100011']
+	lendata = len(datalist) # length of the word entered
+	imdata = iter(pix) 
 
+	# here we will set the array and set the pixels to be chosen
+	# i and j pertains to the datalist array
+
+	# for i in range(lendata):
 	for i in range(lendata):
 		# Extracting 3 pixels at a time
 		pix = [value for value in imdata.__next__()[:3] +
@@ -63,6 +71,7 @@ def encode_enc(newimg, data):
 	# HERE FOR EMBEDDING
 	for pixel in modPix(newimg.getdata(), data):
 		# Putting modified pixels in the new image
+		# THIS IS THE ONLY THING I NEED TO CHANGE
 		newimg.putpixel((x, y), pixel)
 		if (x == width - 1):
 			x = 0

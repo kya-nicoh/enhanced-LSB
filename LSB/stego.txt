@@ -1,2 +1,0 @@
-stegano -> rsa & pseudo
-steganography -> base
