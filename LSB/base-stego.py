@@ -1,5 +1,10 @@
 from PIL import Image
 
+array_x = [10, 5, 42, 30, 53, 39, 8, 23, 42]
+array_y = [50, 80, 40, 120, 302, 120, 239, 359, 201]
+
+# image used: 512 x 512
+
 # Convert encoding data into 8-bit binary
 def genData(data):
 		# list of binary codes of given data
@@ -52,13 +57,14 @@ def modPix(pix, data):
 		yield pix[6:9]
 
 def encode_enc(newimg, data):
-	w = newimg.size[0]
+	width = newimg.size[0]
 	(x, y) = (0, 0)
 
+	# HERE FOR EMBEDDING
 	for pixel in modPix(newimg.getdata(), data):
 		# Putting modified pixels in the new image
 		newimg.putpixel((x, y), pixel)
-		if (x == w - 1):
+		if (x == width - 1):
 			x = 0
 			y += 1
 		else:
