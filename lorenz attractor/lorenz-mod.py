@@ -20,7 +20,7 @@ sol = solve_ivp(lorenz, t_span, initial_conditions, t_eval=t_eval)
 random_seeds = sol.y[:, ::100].flatten()  # Extract every 100th value
 np.random.seed(int(random_seeds[0]))
 
-## Generate random integers within a specified range
+## Generate random integers within a specified range -3
 lower_bound = 0
 upper_bound = 509
 

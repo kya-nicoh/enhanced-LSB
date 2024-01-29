@@ -173,12 +173,13 @@ def decode():
 
 def main():
 	while True:
-		a = int(input(":: Welcome to Steganography ::\n"
+		a = int(input("\033[H\033[J:: Welcome to Steganography ::\n"
 							"1. Encode\n2. Decode\n3. Exit\n"))
 		if (a == 1):
 			encode()
 		elif (a == 2):
 			print("Decoded Word : " + decode())
+			input("\n\nPlease press enter to continue")
 		elif (a == 3):
 			exit()
 		else:
