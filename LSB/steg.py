@@ -1,4 +1,6 @@
 from PIL import Image
+import numpy as np
+from scipy.integrate import solve_ivp
 
 # image used: 512 x 512
 
@@ -55,7 +57,40 @@ def modPix(pix, data):
 		yield pix[3:6]
 		yield pix[6:9]
 
-pix_loc_xy = [(10,50), (5,80), (42,40)]
+global pix_loc_xy
+
+def lorenz_chaos_system(t, xyz, sigma=10, rho=28, beta=8/3):
+    x, y, z = xyz
+    dxdt = sigma * (y - x)
+    dydt = x * (rho - z) - y
+    dzdt = x * y - beta * z
+    return [dxdt, dydt, dzdt]
+
+def lorenz_integration(data):
+	## Solve the Lorenz system
+	initial_conditions = [1.0, 1.0, 1.0]
+
+	t_span = (0, 100)
+	t_eval = np.linspace(*t_span, num=10000)
+	sol = solve_ivp(lorenz_chaos_system, t_span, initial_conditions, t_eval=t_eval)
+
+	# Use the solution as seeds for generating random numbers
+	random_seeds = sol.y[:, ::100].flatten()  # Extract every 100th value
+	np.random.seed(int(random_seeds[0]))
+
+	## Generate random integers within a specified range (size of the image)
+	lower_bound = 0
+	upper_bound = 509
+
+	## 1 letter = 6 numbers/ 3 pixels
+	num_random_numbers = len(data) * 6
+	random_numbers = np.random.randint(lower_bound, upper_bound, size=num_random_numbers)
+
+	paired_numbers = random_numbers.reshape(-1,2)
+	global pix_loc_xy
+	pix_loc_xy = [tuple(row) for row in paired_numbers]
+	print(pix_loc_xy)
+	np.savetxt("LSB/lorenz_decryption.txt", pix_loc_xy)
 
 def encode_enc(newimg, data):
 	i = 0
@@ -73,7 +108,8 @@ def encode():
 	data = input("Enter data to be encoded : ")
 	if (len(data) == 0):
 		raise ValueError('Data is empty')
-
+	
+	lorenz_integration(data)
 	newimg = image.copy()
 	encode_enc(newimg, data)
 
@@ -90,7 +126,6 @@ def decode():
 	# imgdata = iter(image.getdata())
 
 	imgdata = list(iter(image.getdata()))
-
 
 	# while (True):
 	# 	pixels = [value for value in imgdata.__next__()[:3] +
@@ -159,15 +194,17 @@ def decode():
 	# concatinate the data and convert to binstr
 
 def main():
-	a = int(input(":: Welcome to Steganography ::\n"
-						"1. Encode\n2. Decode\n"))
-	if (a == 1):
-		encode()
-
-	elif (a == 2):
-		print("Decoded Word : " + decode())
-	else:
-		raise Exception("Enter correct input")
+	while True:
+		a = int(input(":: Welcome to Steganography ::\n"
+							"1. Encode\n2. Decode\n3. Exit"))
+		if (a == 1):
+			encode()
+		elif (a == 2):
+			print("Decoded Word : " + decode())
+		elif (a == 3):
+			exit
+		else:
+			raise Exception("Enter correct input")
 
 # Driver Code
 if __name__ == '__main__' :
