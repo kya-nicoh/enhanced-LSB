@@ -3,7 +3,7 @@ from PIL import Image
 # yield
 # iter
 # img.getdata()
-
+# imdata.__next__()
 
 # image used: 512 x 512
 
@@ -21,11 +21,10 @@ def genData(data):
 def modPix(pix, data):
 	datalist = genData(data) # generates the binary equivalent of the data ['01011120', '10100011']
 	lendata = len(datalist) # length of the word entered
-	imdata = iter(pix) 
+	imdata = iter(pix) # pixel data of the image
 
 	# here we will set the array and set the pixels to be chosen
 	# i and j pertains to the datalist array
-
 	# for i in range(lendata):
 	for i in range(lendata):
 		# Extracting 3 pixels at a time
@@ -62,22 +61,19 @@ def modPix(pix, data):
 		yield pix[3:6]
 		yield pix[6:9]
 
+pix_loc_xy = [(10,50), (5,80), (42,40)]
+# , (30,120), (53,302), (39,120), (8,239), (23,359), (42,201)
+
 def encode_enc(newimg, data):
-	width = newimg.size[0]
-	(x, y) = (0, 0)
-
-	pix_loc_xy = [(10,50), (5,80), (42,40), (30,120), (53,302), (39,120), (8,239), (23,359), (42,201)]
-
-	# HERE FOR EMBEDDING
+	# width = newimg.size[0]
+	# (x, y) = (0, 0)
+	i = 0
 	for pixel in modPix(newimg.getdata(), data):
 		# Putting modified pixels in the new image
-		# THIS IS THE ONLY THING I NEED TO CHANGE
-		newimg.putpixel((x, y), pixel)
-		if (x == width - 1):
-			x = 0
-			y += 1
-		else:
-			x += 1
+		print(f'pixel: {pixel}')
+		print(f'pix_loc_xy: {pix_loc_xy[i]}')
+		newimg.putpixel(pix_loc_xy[i], pixel)
+		i+=1
 
 def encode():
 	img = input("Enter image name(with extension) : ")
@@ -98,16 +94,58 @@ def decode():
 	image = Image.open(img, 'r')
 
 	data = ''
-	imgdata = iter(image.getdata())
+	binstr = ''
 
-	while (True):
-		pixels = [value for value in imgdata.__next__()[:3] +
-								imgdata.__next__()[:3] +
-								imgdata.__next__()[:3]]
+	# imgdata = iter(image.getdata())
 
-		# string of binary data
-		binstr = ''
+	imgdata = list(iter(image.getdata()))
 
+
+	# while (True):
+	# 	pixels = [value for value in imgdata.__next__()[:3] +
+	# 							imgdata.__next__()[:3] +
+	# 							imgdata.__next__()[:3]]
+
+	# 	for i in pixels[:8]:
+	# 		if (i % 2 == 0):
+	# 			binstr += '0'
+	# 		else:
+	# 			binstr += '1'
+
+	# 	data += chr(int(binstr, 2))
+
+	# 	print(f'pixels: {pixels}')
+	# 	print(f'binstr: {binstr}')
+	# 	print(f'data: {data}')
+
+	# 	if (pixels[-1] % 2 != 0):
+	# 		return data
+	
+
+	for z in range(0, len(pix_loc_xy), 3):
+		target_cords_A = pix_loc_xy[z]
+		target_cords_B = pix_loc_xy[z+1]
+		target_cords_C = pix_loc_xy[z+2]
+		
+
+		# Calculate the index of the target pixel in the flattened pixel array
+		pix_loc_A = target_cords_A[1] * image.width + target_cords_A[0]
+		pix_loc_B = target_cords_B[1] * image.width + target_cords_B[0]
+		pix_loc_C = target_cords_C[1] * image.width + target_cords_C[0]
+
+
+		# Skip to the target pixel
+		# TODO make it so that it skips to a pixel not just scans it
+		# for _ in range(target_pixel_index):
+		# 	imgdata.__next__()
+		# # Extract RGB values of the target pixel
+		# pixels = [value for value in imgdata.__next__()[:3]]
+
+
+		pixels = [value for value in imgdata[pix_loc_A][:3] + 
+								imgdata[pix_loc_B][:3] + 
+								imgdata[pix_loc_C][:3]]
+	
 		for i in pixels[:8]:
 			if (i % 2 == 0):
 				binstr += '0'
@@ -115,8 +153,19 @@ def decode():
 				binstr += '1'
 
 		data += chr(int(binstr, 2))
-		if (pixels[-1] % 2 != 0):
-			return data
+
+		print(f'target_cordsA: {target_cords_A}\ntarget_cordsB: {target_cords_B}\ntarget_cordsC: {target_cords_C}')
+		print(f'pix_locA: {pix_loc_A}\npix_locB: {pix_loc_B}\npix_locC: {pix_loc_C}')
+		print(f'pixels: {pixels}')
+		print(f'binstr: {binstr}')
+		print(f'data: {data}')
+
+	return data
+
+	# go to this pixel
+	# do imgdata__next__
+	# for i in pixels then if
+	# concatinate the data and convert to binstr
 
 def main():
 	a = int(input(":: Welcome to Steganography ::\n"

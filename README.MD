@@ -3,14 +3,22 @@
 
 ## Lorenz Chaos System
 Constraints for lorenz numbers:
-
 1. length of word
 2. no repeating
 3. no number within the generated number + 3
 4. max num is image width - 3
+5. No negatives
 
 ## LSB
+Encryption Key
+[ ] - Get Location
+[ ] - Embedd
+[ ] - Move to the next
 
+Decryption Key
+[ ] - Get Array list
+[ ] - Extract
+[ ] - Move to the next
 
 ## HEIC
 - https://stackoverflow.com/questions/54395735/how-to-work-with-heic-image-file-types-in-python
