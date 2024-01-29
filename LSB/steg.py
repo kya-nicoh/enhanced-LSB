@@ -78,7 +78,7 @@ def lorenz_integration(data):
 	random_seeds = sol.y[:, ::100].flatten()  # Extract every 100th value
 	np.random.seed(int(random_seeds[0]))
 
-	## Generate random integers within a specified range (size of the image)
+	## Generate random integers within a specified range (size of the image) - 3
 	lower_bound = 0
 	upper_bound = 509
 
@@ -90,7 +90,10 @@ def lorenz_integration(data):
 	global pix_loc_xy
 	pix_loc_xy = [tuple(row) for row in paired_numbers]
 	print(pix_loc_xy)
-	np.savetxt("LSB/lorenz_decryption.txt", pix_loc_xy)
+	
+	with open("lorenz_dec.txt", "w") as file:
+		for item in pix_loc_xy:
+			file.write(f"{item[0]}, {item[1]}\n")
 
 def encode_enc(newimg, data):
 	i = 0
@@ -120,53 +123,32 @@ def decode():
 	img = input("Enter image name(with extension) : ")
 	image = Image.open(img, 'r')
 
+	file_path = input('Please enter the file path of key (with extension): ')
+
+	pix_loc_xy = []
+
+	with open(file_path, "r") as file:
+		for line in file:
+			values = line.strip().split(',')
+			pix_loc_xy.append((int(values[0]), int(values[1])))
+
+	print(pix_loc_xy)
+	
 	data = ''
 	binstr = ''
 
-	# imgdata = iter(image.getdata())
-
 	imgdata = list(iter(image.getdata()))
 
-	# while (True):
-	# 	pixels = [value for value in imgdata.__next__()[:3] +
-	# 							imgdata.__next__()[:3] +
-	# 							imgdata.__next__()[:3]]
-
-	# 	for i in pixels[:8]:
-	# 		if (i % 2 == 0):
-	# 			binstr += '0'
-	# 		else:
-	# 			binstr += '1'
-
-	# 	data += chr(int(binstr, 2))
-
-	# 	print(f'pixels: {pixels}')
-	# 	print(f'binstr: {binstr}')
-	# 	print(f'data: {data}')
-
-	# 	if (pixels[-1] % 2 != 0):
-	# 		return data
-	
 
 	for z in range(0, len(pix_loc_xy), 3):
 		target_cords_A = pix_loc_xy[z]
 		target_cords_B = pix_loc_xy[z+1]
 		target_cords_C = pix_loc_xy[z+2]
 		
-
 		# Calculate the index of the target pixel in the flattened pixel array
 		pix_loc_A = target_cords_A[1] * image.width + target_cords_A[0]
 		pix_loc_B = target_cords_B[1] * image.width + target_cords_B[0]
 		pix_loc_C = target_cords_C[1] * image.width + target_cords_C[0]
-
-
-		# Skip to the target pixel
-		# TODO make it so that it skips to a pixel not just scans it
-		# for _ in range(target_pixel_index):
-		# 	imgdata.__next__()
-		# # Extract RGB values of the target pixel
-		# pixels = [value for value in imgdata.__next__()[:3]]
-
 
 		pixels = [value for value in imgdata[pix_loc_A][:3] + 
 								imgdata[pix_loc_B][:3] + 
@@ -184,25 +166,21 @@ def decode():
 		print(f'pix_locA: {pix_loc_A}\npix_locB: {pix_loc_B}\npix_locC: {pix_loc_C}')
 		print(f'pixels: {pixels}')
 		print(f'binstr: {binstr}')
+		binstr = ''
 		print(f'data: {data}')
 
 	return data
 
-	# go to this pixel
-	# do imgdata__next__
-	# for i in pixels then if
-	# concatinate the data and convert to binstr
-
 def main():
 	while True:
 		a = int(input(":: Welcome to Steganography ::\n"
-							"1. Encode\n2. Decode\n3. Exit"))
+							"1. Encode\n2. Decode\n3. Exit\n"))
 		if (a == 1):
 			encode()
 		elif (a == 2):
 			print("Decoded Word : " + decode())
 		elif (a == 3):
-			exit
+			exit()
 		else:
 			raise Exception("Enter correct input")
 
