@@ -22,3 +22,12 @@ Decryption Key
 - https://stackoverflow.com/questions/54395735/how-to-work-with-heic-image-file-types-in-python
 - https://pypi.org/project/pyheif/
 - https://duckduckgo.com/?q=work+with+heic+python&atb=v314-1&ia=web&iax=qa
+
+
+# To search
+- yield
+- iter
+- img.getdata()
+- imdata.__next__()
+- np.linspace
+- solve_ivp

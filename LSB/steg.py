@@ -1,10 +1,5 @@
 from PIL import Image
 
-# yield
-# iter
-# img.getdata()
-# imdata.__next__()
-
 # image used: 512 x 512
 
 # Convert encoding data into 8-bit binary
@@ -16,8 +11,7 @@ def genData(data):
 			newd.append(format(ord(i), '08b'))
 		return newd
 
-# Pixels are modified according to the
-# 8-bit binary data and finally returned
+# Pixels are modified according to the8-bit binary data and finally returned
 def modPix(pix, data):
 	datalist = genData(data) # generates the binary equivalent of the data ['01011120', '10100011']
 	lendata = len(datalist) # length of the word entered
@@ -62,11 +56,8 @@ def modPix(pix, data):
 		yield pix[6:9]
 
 pix_loc_xy = [(10,50), (5,80), (42,40)]
-# , (30,120), (53,302), (39,120), (8,239), (23,359), (42,201)
 
 def encode_enc(newimg, data):
-	# width = newimg.size[0]
-	# (x, y) = (0, 0)
 	i = 0
 	for pixel in modPix(newimg.getdata(), data):
 		# Putting modified pixels in the new image
