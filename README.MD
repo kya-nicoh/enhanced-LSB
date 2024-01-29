@@ -4,15 +4,12 @@
 ## Lorenz Chaos System
 [x] - Generate random numbers
 Constraints for lorenz numbers:
-[ ] - length of word
-[ ] - no repeating
-[ ] - no number within the generated number + 3
-[ ] - max num is image width - 3
-[ ] - No negatives
+[x] - length of word
+[x] - no repeating
 
 ## LSB
 Encryption Key
-[ ] - Get Location
+[ ] - Get Array List
 [ ] - Embedd
 [ ] - Move to the next
 
