@@ -1,1 +1,5 @@
-NTRU_python
+Things of note:
+- NTRU only has limited size as input
+
+pq_ntru - problem with running
+github.com/jkrauze/ntru - 

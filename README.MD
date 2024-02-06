@@ -1,5 +1,13 @@
-## NTRUEncrypt
+## To-Do
+[] - NTRUEncrypt
+[] - Results
+[] - Convert to classes and objects
+[] - Polish to limit test relative to image size etc. QA
 
+## NTRUEncrypt
+- find encryption that is from scratch
+- encrypt text during entering
+- decrypt text during extracting
 
 ## Lorenz Chaos System
 [x] - Generate random numbers
@@ -9,20 +17,19 @@ Constraints for lorenz numbers:
 
 ## LSB
 Encryption Key
-[ ] - Get Array List
-[ ] - Embedd
-[ ] - Move to the next
+[x] - Get Array List
+[x] - Embedd
+[x] - Move to the next
 
 Decryption Key
-[ ] - Get Array list
-[ ] - Extract
-[ ] - Move to the next
+[x] - Get Array list
+[x] - Extract
+[x] - Move to the next
 
 ## HEIC
 - https://stackoverflow.com/questions/54395735/how-to-work-with-heic-image-file-types-in-python
 - https://pypi.org/project/pyheif/
 - https://duckduckgo.com/?q=work+with+heic+python&atb=v314-1&ia=web&iax=qa
-
 
 # To search
 - yield

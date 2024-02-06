@@ -80,6 +80,7 @@ def lorenz_integration(data):
 
 	## Generate random integers within a specified range (size of the image) - 3
 	lower_bound = 0
+	# 512 - 3
 	upper_bound = 509
 
 	## 1 letter = 6 numbers/ 3 pixels
