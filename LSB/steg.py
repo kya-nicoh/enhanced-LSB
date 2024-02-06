@@ -2,7 +2,19 @@ from PIL import Image
 import numpy as np
 from scipy.integrate import solve_ivp
 
+from NTRU.NTRUencrypt import NTRUencrypt
+from NTRU.NTRUdecrypt import NTRUdecrypt
+from NTRU.NTRUutil import *
+
 # image used: 512 x 512
+
+global pix_loc_xy
+# Initialise the private and public keys, write them out (and test reading)
+NTRUdecrypt = NTRUdecrypt()
+NTRUdecrypt.setNpq(N=107,p=3,q=64,df=15,dg=12,d=5)
+NTRUdecrypt.genPubPriv()
+
+NTRUencrypt = NTRUencrypt()
 
 # Convert encoding data into 8-bit binary
 def genData(data):
@@ -57,8 +69,6 @@ def modPix(pix, data):
 		yield pix[3:6]
 		yield pix[6:9]
 
-global pix_loc_xy
-
 def lorenz_chaos_system(t, xyz, sigma=10, rho=28, beta=8/3):
     x, y, z = xyz
     dxdt = sigma * (y - x)
@@ -66,6 +76,7 @@ def lorenz_chaos_system(t, xyz, sigma=10, rho=28, beta=8/3):
     dzdt = x * y - beta * z
     return [dxdt, dydt, dzdt]
 
+# width of pic
 def lorenz_integration(data):
 	## Solve the Lorenz system
 	initial_conditions = [1.0, 1.0, 1.0]
@@ -80,11 +91,11 @@ def lorenz_integration(data):
 
 	## Generate random integers within a specified range (size of the image) - 3
 	lower_bound = 0
-	# 512 - 3
+	# TODO 512 - 3 (Change this to depend on the size of the image)
 	upper_bound = 509
 
 	## 1 letter = 6 numbers/ 3 pixels
-	num_random_numbers = len(data) * 6
+	num_random_numbers = len(data) * 6 # 6 because 1 letter is 3 pixels and 3 pixels make up of 6 numbers x,y
 	random_numbers = np.random.randint(lower_bound, upper_bound, size=num_random_numbers)
 
 	paired_numbers = random_numbers.reshape(-1,2)
@@ -100,12 +111,16 @@ def encode_enc(newimg, data):
 	i = 0
 	for pixel in modPix(newimg.getdata(), data):
 		# Putting modified pixels in the new image
-		print(f'pixel: {pixel}')
+		# print(f'pixel: {pixel}')
 		print(f'pix_loc_xy: {pix_loc_xy[i]}')
 		newimg.putpixel(pix_loc_xy[i], pixel)
 		i+=1
 
 def encode():
+	NTRUencrypt.readPub()
+	NTRUencrypt.setM([1,-1,0,0,0,0,0,1,-1])
+	NTRUencrypt.encrypt()
+
 	img = input("Enter image name(with extension) : ")
 	image = Image.open(img, 'r')
 
@@ -113,6 +128,11 @@ def encode():
 	if (len(data) == 0):
 		raise ValueError('Data is empty')
 	
+	print(f"data before: {data}")
+	NTRUencrypt.encryptString(data)
+	data = NTRUencrypt.Me
+	print(f"DATA Entered: {data}")
+
 	lorenz_integration(data)
 	newimg = image.copy()
 	encode_enc(newimg, data)
@@ -163,13 +183,16 @@ def decode():
 
 		data += chr(int(binstr, 2))
 
-		print(f'target_cordsA: {target_cords_A}\ntarget_cordsB: {target_cords_B}\ntarget_cordsC: {target_cords_C}')
-		print(f'pix_locA: {pix_loc_A}\npix_locB: {pix_loc_B}\npix_locC: {pix_loc_C}')
+		# print(f'target_cordsA: {target_cords_A}\ntarget_cordsB: {target_cords_B}\ntarget_cordsC: {target_cords_C}')
+		# print(f'pix_locA: {pix_loc_A}\npix_locB: {pix_loc_B}\npix_locC: {pix_loc_C}')
 		print(f'pixels: {pixels}')
 		print(f'binstr: {binstr}')
 		binstr = ''
 		print(f'data: {data}')
 
+	print('Reached the end', NTRUencrypt.Me)
+	NTRUdecrypt.decryptString(data)
+	data = NTRUdecrypt.M
 	return data
 
 def main():
@@ -180,7 +203,7 @@ def main():
 			encode()
 		elif (a == 2):
 			print("Decoded Word : " + decode())
-			input("\n\nPlease press enter to continue")
+			input("\n\nPlease press enter to continue\n")
 		elif (a == 3):
 			exit()
 		else:
